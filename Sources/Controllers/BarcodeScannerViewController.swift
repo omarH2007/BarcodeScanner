@@ -2,6 +2,7 @@ import UIKit
 import AVFoundation
 
 // MARK: - Delegates
+public protocol BarcodeScannerViewControllerDelegate:BarcodeScannerCodeDelegate,BarcodeScannerErrorDelegate,BarcodeScannerDismissalDelegate{}
 
 /// Delegate to handle the captured code.
 @objc public protocol BarcodeScannerCodeDelegate: AnyObject {
