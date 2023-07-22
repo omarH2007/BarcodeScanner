@@ -2,7 +2,7 @@ import UIKit
 import AVFoundation
 
 // MARK: - Delegates
-public protocol BarcodeScannerViewControllerDelegate:BarcodeScannerCodeDelegate,BarcodeScannerErrorDelegate,BarcodeScannerDismissalDelegate{}
+@objc public protocol BarcodeScannerViewControllerDelegate:BarcodeScannerCodeDelegate,BarcodeScannerErrorDelegate,BarcodeScannerDismissalDelegate{}
 
 /// Delegate to handle the captured code.
 @objc public protocol BarcodeScannerCodeDelegate: AnyObject {
@@ -38,12 +38,9 @@ open class BarcodeScannerViewController: UIViewController {
 
   // MARK: - Public properties
 
-  /// Delegate to handle the captured code.
-  @objc public weak var codeDelegate: BarcodeScannerCodeDelegate?
-  /// Delegate to report errors.
-  @objc public weak var errorDelegate: BarcodeScannerErrorDelegate?
-  /// Delegate to dismiss barcode scanner when the close button has been pressed.
-  @objc public weak var dismissalDelegate: BarcodeScannerDismissalDelegate?
+    // MARK: - Public properties
+    @objc public weak var delegate:BarcodeScannerViewControllerDelegate?
+
 
   /// When the flag is set to `true` controller returns a captured code
   /// and waits for the next reset action.
@@ -295,7 +292,7 @@ private extension BarcodeScannerViewController {
 
 extension BarcodeScannerViewController: HeaderViewControllerDelegate {
   func headerViewControllerDidTapCloseButton(_ controller: HeaderViewController) {
-    dismissalDelegate?.scannerDidDismiss(self)
+      delegate?.scannerDidDismiss(self)
   }
 }
 
@@ -311,7 +308,7 @@ extension BarcodeScannerViewController: CameraViewControllerDelegate {
   }
 
   func cameraViewController(_ controller: CameraViewController, didReceiveError error: Error) {
-    errorDelegate?.scanner(self, didReceiveError: error)
+      delegate?.scanner(self, didReceiveError: error)
   }
 
   func cameraViewControllerDidTapSettingsButton(_ controller: CameraViewController) {
@@ -346,7 +343,7 @@ extension BarcodeScannerViewController: CameraViewControllerDelegate {
       rawType = AVMetadataObject.ObjectType.upca.rawValue
     }
 
-    codeDelegate?.scanner(self, didCaptureCode: code, type: rawType)
+      delegate?.scanner(self, didCaptureCode: code, type: rawType)
     animateFlash(whenProcessing: isOneTimeSearch)
   }
 }
