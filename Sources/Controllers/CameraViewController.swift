@@ -425,7 +425,7 @@ private extension CameraViewController {
 
   func makeCameraButton() -> UIButton {
     let button = UIButton(type: .custom)
-    //button.setImage(imageNamed("cameraRotate"), for: UIControl.State())
+    button.setImage(imageNamed("cameraRotate"), for: UIControl.State())
     button.isHidden = !showsCameraButton
     return button
   }
