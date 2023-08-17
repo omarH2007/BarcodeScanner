@@ -30,6 +30,10 @@ public final class HeaderViewController: UIViewController {
     view.addSubview(navigationBar)
     setupConstraints()
   }
+    
+    public override var preferredStatusBarStyle: UIStatusBarStyle {
+        return  .lightContent
+    }
 
   // MARK: - Actions
 

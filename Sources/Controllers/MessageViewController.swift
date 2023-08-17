@@ -32,7 +32,10 @@ public final class MessageViewController: UIViewController {
   }
 
   // MARK: - View lifecycle
-
+    public override var preferredStatusBarStyle: UIStatusBarStyle {
+        return  .lightContent
+    }
+    
   public override func viewDidLoad() {
     super.viewDidLoad()
     view.addSubview(blurView)

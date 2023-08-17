@@ -301,6 +301,9 @@ public final class CameraViewController: UIViewController {
       completion: nil
     )
   }
+    public override var preferredStatusBarStyle: UIStatusBarStyle {
+        return  .lightContent
+    }
 }
 
 // MARK: - Layout

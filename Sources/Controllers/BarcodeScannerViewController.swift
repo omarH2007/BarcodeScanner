@@ -346,4 +346,8 @@ extension BarcodeScannerViewController: CameraViewControllerDelegate {
       delegate?.scanner(self, didCaptureCode: code, type: rawType)
     animateFlash(whenProcessing: isOneTimeSearch)
   }
+    
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        return  .lightContent
+    }
 }
