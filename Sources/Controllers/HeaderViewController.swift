@@ -20,7 +20,18 @@ public final class HeaderViewController: UIViewController {
   public private(set) lazy var closeButton: UIButton = self.makeCloseButton()
 
   // MARK: - View lifecycle
-
+    
+    
+    init(navigationBar:UINavigationBar?=nil){
+        super.init(nibName: nil, bundle: nil)
+        self.navigationBar = navigationBar ?? makeNavigationBar()
+    }
+    
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
   public override func viewDidLoad() {
     super.viewDidLoad()
 

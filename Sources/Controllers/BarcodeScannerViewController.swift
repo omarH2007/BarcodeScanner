@@ -68,8 +68,10 @@ open class BarcodeScannerViewController: UIViewController {
 
   // MARK: - UI
 
+    public private(set)  var navigationBar: UINavigationBar?
+
   // Title label and close button.
-  public private(set) lazy var headerViewController: HeaderViewController = .init()
+    public private(set) lazy var headerViewController: HeaderViewController = .init(navigationBar:navigationBar)
   /// Information view with description label.
   public private(set) lazy var messageViewController: MessageViewController = .init()
   /// Camera view with custom buttons.
@@ -93,6 +95,17 @@ open class BarcodeScannerViewController: UIViewController {
 
   // MARK: - View lifecycle
 
+
+    init(navigationBar:UINavigationBar?=nil){
+        super.init(nibName: nil, bundle: nil)
+        self.navigationBar = navigationBar 
+    }
+    
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
   open override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = UIColor.black
@@ -347,7 +360,5 @@ extension BarcodeScannerViewController: CameraViewControllerDelegate {
     animateFlash(whenProcessing: isOneTimeSearch)
   }
     
-    open override var preferredStatusBarStyle: UIStatusBarStyle {
-        return  .lightContent
-    }
+  
 }
