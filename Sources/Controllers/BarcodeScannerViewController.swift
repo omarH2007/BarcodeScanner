@@ -96,9 +96,9 @@ open class BarcodeScannerViewController: UIViewController {
   // MARK: - View lifecycle
 
 
-   public init(navigationBar:UINavigationBar?=nil){
+    public init(navigationBar:UINavigationBar?=nil){
+        self.navigationBar = navigationBar
         super.init(nibName: nil, bundle: nil)
-        self.navigationBar = navigationBar 
     }
     
     required public init?(coder: NSCoder) {

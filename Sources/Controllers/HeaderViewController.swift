@@ -13,7 +13,7 @@ public final class HeaderViewController: UIViewController {
   // MARK: - UI properties
 
   /// Header view with title label and close button.
-  public private(set) lazy var navigationBar: UINavigationBar = self.makeNavigationBar()
+  public private(set)  var navigationBar: UINavigationBar!
   /// Title view of the navigation bar.
   public private(set) lazy var titleLabel: UILabel = self.makeTitleLabel()
   /// Left bar button item of the navigation bar.
@@ -24,7 +24,10 @@ public final class HeaderViewController: UIViewController {
     
     init(navigationBar:UINavigationBar?=nil){
         super.init(nibName: nil, bundle: nil)
+        navigationBar?.items = [makeNavigationItem()]
+        self.setNeedsStatusBarAppearanceUpdate()
         self.navigationBar = navigationBar ?? makeNavigationBar()
+        self.setNeedsStatusBarAppearanceUpdate()
     }
     
     
