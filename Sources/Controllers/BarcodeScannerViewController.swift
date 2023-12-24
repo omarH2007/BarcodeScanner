@@ -169,13 +169,13 @@ open class BarcodeScannerViewController: UIViewController {
       resetState()
     }
 
-    if newValue.state != .processing {
-      expandedConstraints.deactivate()
-      collapsedConstraints.activate()
-    } else {
-      collapsedConstraints.deactivate()
-      expandedConstraints.activate()
-    }
+//    if newValue.state != .processing {
+//      expandedConstraints.deactivate()
+//      collapsedConstraints.activate()
+//    } else {
+//      collapsedConstraints.deactivate()
+//      expandedConstraints.activate()
+//    }
 
     messageViewController.status = newValue
 
@@ -189,10 +189,10 @@ open class BarcodeScannerViewController: UIViewController {
           self?.resetState()
         }
 
-        self?.messageView.layer.removeAllAnimations()
-        if self?.status.state == .processing {
-          self?.messageViewController.animateLoading()
-        }
+//        self?.messageView.layer.removeAllAnimations()
+//        if self?.status.state == .processing {
+//          self?.messageViewController.animateLoading()
+//        }
       }))
   }
 
