@@ -11,6 +11,7 @@ protocol CameraViewControllerDelegate: AnyObject {
     _ controller: CameraViewController,
     didOutput metadataObjects: [AVMetadataObject]
   )
+    func flashShow(isHidden:Bool)
 }
 
 /// View controller responsible for camera controls and video capturing.
@@ -33,7 +34,7 @@ public final class CameraViewController: UIViewController {
   /// Animated focus view.
   public private(set) lazy var focusView: UIView = self.makeFocusView()
   /// Button to change torch mode.
-  public private(set) lazy var flashButton: UIButton = .init(type: .custom)
+//  public private(set) lazy var flashButton: UIButton = .init(type: .custom)
   /// Button that opens settings to allow camera usage.
   public private(set) lazy var settingsButton: UIButton = self.makeSettingsButton()
   // Button to switch between front and back camera.
@@ -56,7 +57,7 @@ public final class CameraViewController: UIViewController {
   private let permissionService = VideoPermissionService()
 
   /// The current torch mode on the capture device.
-  private var torchMode: TorchMode = .off {
+    public  var torchMode: TorchMode = .off {
     didSet {
       guard let captureDevice = captureDevice, captureDevice.hasFlash else { return }
       guard captureDevice.isTorchModeSupported(torchMode.captureTorchMode) else { return }
@@ -67,7 +68,6 @@ public final class CameraViewController: UIViewController {
         captureDevice.unlockForConfiguration()
       } catch {}
 
-      flashButton.setImage(torchMode.image, for: UIControl.State())
     }
   }
 
@@ -99,7 +99,7 @@ public final class CameraViewController: UIViewController {
     }
 
     view.layer.addSublayer(videoPreviewLayer)
-    view.addSubviews(settingsButton, flashButton, focusView, cameraButton)
+    view.addSubviews(settingsButton, focusView, cameraButton)
 
     torchMode = .off
     focusView.isHidden = true
@@ -138,7 +138,7 @@ public final class CameraViewController: UIViewController {
       self.captureSession.startRunning()
     }
     focusView.isHidden = false
-    flashButton.isHidden = captureDevice?.position == .front
+    delegate?.flashShow(isHidden: captureDevice?.position == .front)
     cameraButton.isHidden = !showsCameraButton
   }
 
@@ -150,18 +150,14 @@ public final class CameraViewController: UIViewController {
     torchMode = .off
     captureSession.stopRunning()
     focusView.isHidden = true
-    flashButton.isHidden = true
+    delegate?.flashShow(isHidden: true)
     cameraButton.isHidden = true
   }
 
   // MARK: - Actions
 
   private func setupActions() {
-    flashButton.addTarget(
-      self,
-      action: #selector(handleFlashButtonTap),
-      for: .touchUpInside
-    )
+  
     settingsButton.addTarget(
       self,
       action: #selector(handleSettingsButtonTap),
@@ -245,7 +241,7 @@ public final class CameraViewController: UIViewController {
       }
       captureSession.addInput(newInput)
       captureSession.commitConfiguration()
-      flashButton.isHidden = position == .front
+      delegate?.flashShow(isHidden: position == .front)
     } catch {
       delegate?.cameraViewController(self, didReceiveError: error)
       return
@@ -312,14 +308,6 @@ private extension CameraViewController {
   func setupConstraints() {
     if #available(iOS 11.0, *) {
       NSLayoutConstraint.activate(
-        flashButton.topAnchor.constraint(
-          equalTo: view.safeAreaLayoutGuide.topAnchor,
-          constant: 30
-        ),
-        flashButton.trailingAnchor.constraint(
-          equalTo: view.safeAreaLayoutGuide.trailingAnchor,
-          constant: -13
-        ),
         cameraButton.bottomAnchor.constraint(
           equalTo: view.safeAreaLayoutGuide.bottomAnchor,
           constant: -30
@@ -327,8 +315,6 @@ private extension CameraViewController {
       )
     } else {
       NSLayoutConstraint.activate(
-        flashButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 30),
-        flashButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -13),
         cameraButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30)
       )
     }
@@ -336,8 +322,6 @@ private extension CameraViewController {
     let imageButtonSize: CGFloat = 37
 
     NSLayoutConstraint.activate(
-      flashButton.widthAnchor.constraint(equalToConstant: imageButtonSize),
-      flashButton.heightAnchor.constraint(equalToConstant: imageButtonSize),
 
       settingsButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
       settingsButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
@@ -346,7 +330,7 @@ private extension CameraViewController {
 
       cameraButton.widthAnchor.constraint(equalToConstant: 48),
       cameraButton.heightAnchor.constraint(equalToConstant: 48),
-      cameraButton.trailingAnchor.constraint(equalTo: flashButton.trailingAnchor)
+      cameraButton.trailingAnchor.constraint(equalTo: view.trailingAnchor)
     )
 
     setupFocusViewConstraints()

@@ -7,7 +7,7 @@ public enum TorchMode {
   case off
 
   /// Returns the next torch mode.
-  var next: TorchMode {
+    public var next: TorchMode {
     switch self {
     case .on:
       return .off

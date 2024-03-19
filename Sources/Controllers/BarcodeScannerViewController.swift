@@ -11,6 +11,7 @@ import AVFoundation
     didCaptureCode code: String,
     type: String
   )
+    func flashShow(isHidden:Bool)
 }
 
 /// Delegate to report errors.
@@ -67,11 +68,6 @@ open class BarcodeScannerViewController: UIViewController {
   private var isVisible = false
 
   // MARK: - UI
-
-    public private(set)  var navigationBar: UINavigationBar?
-
-  // Title label and close button.
-    public private(set) lazy var headerViewController: HeaderViewController = .init(navigationBar:navigationBar)
   /// Information view with description label.
   public private(set) lazy var messageViewController: MessageViewController = .init()
   /// Camera view with custom buttons.
@@ -95,9 +91,7 @@ open class BarcodeScannerViewController: UIViewController {
 
   // MARK: - View lifecycle
 
-
-    public init(navigationBar:UINavigationBar?=nil){
-        self.navigationBar = navigationBar
+    public init(){
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -256,28 +250,12 @@ private extension BarcodeScannerViewController {
     NSLayoutConstraint.activate(
       cameraView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
       cameraView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+      cameraView.topAnchor.constraint(equalTo: view.topAnchor),
       cameraView.bottomAnchor.constraint(
         equalTo: view.bottomAnchor,
         constant: hideFooterView ? 0 : -BarcodeScannerViewController.footerHeight
       )
     )
-
-    if navigationController != nil {
-      cameraView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-    } else {
-      headerViewController.delegate = self
-      add(childViewController: headerViewController)
-
-      let headerView = headerViewController.view!
-
-      NSLayoutConstraint.activate(
-        headerView.topAnchor.constraint(equalTo: view.topAnchor),
-        headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-        headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        headerView.bottomAnchor.constraint(equalTo: headerViewController.navigationBar.bottomAnchor),
-        cameraView.topAnchor.constraint(equalTo: headerView.bottomAnchor)
-      )
-    }
   }
 
   private func makeExpandedConstraints() -> [NSLayoutConstraint] {
@@ -360,5 +338,8 @@ extension BarcodeScannerViewController: CameraViewControllerDelegate {
     animateFlash(whenProcessing: isOneTimeSearch)
   }
     
+    func flashShow(isHidden: Bool) {
+        delegate?.flashShow(isHidden: isHidden)
+    }
   
 }
