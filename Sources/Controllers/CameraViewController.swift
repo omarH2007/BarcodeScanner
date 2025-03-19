@@ -249,18 +249,20 @@ public final class CameraViewController: UIViewController {
   }
 
   private func setupSessionOutput() {
-    guard !isSimulatorRunning else {
-      return
+      guard !isSimulatorRunning else {
+        return
+      }
+
+      let output = AVCaptureMetadataOutput()
+      captureSession.addOutput(output)
+      output.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
+      let supportedTypes = output.availableMetadataObjectTypes
+      let types = metadata.filter { supportedTypes.contains($0) }
+      output.metadataObjectTypes = types
+      videoPreviewLayer?.session = captureSession
+
+      view.setNeedsLayout()
     }
-
-    let output = AVCaptureMetadataOutput()
-    captureSession.addOutput(output)
-    output.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
-    output.metadataObjectTypes = metadata
-    videoPreviewLayer?.session = captureSession
-
-    view.setNeedsLayout()
-  }
 
   /// Switch front/back camera.
   private func swapCamera() {
